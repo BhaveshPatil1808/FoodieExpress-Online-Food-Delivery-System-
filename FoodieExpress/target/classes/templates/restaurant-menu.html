@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress | Restaurant Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --theme-primary: #ff5722; /* Deep Orange (Customer CTA) */
+            --theme-secondary: #ff9800; /* Amber */
+            --theme-bg: #fffbf5; /* Very light, warm background */
+        }
+        body {
+            background-color: var(--theme-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding-top: 70px; /* Space for fixed header */
+        }
+        
+        /* --- Fixed Application Header (Customer Theme) --- */
+        .app-header {
+            background-color: white;
+            border-bottom: 2px solid var(--theme-primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header-title {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .text-theme { color: var(--theme-primary); }
+        .content-container { padding-top: 2rem; padding-bottom: 3rem; }
+
+        /* --- Restaurant Header Banner --- */
+        .restaurant-banner {
+            background: linear-gradient(135deg, #333 0%, var(--theme-primary) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* --- Menu Item Card --- */
+        .menu-item-card {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        .menu-item-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        /* Item Image */
+        .item-image-container {
+            flex-shrink: 0;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .item-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Item Details */
+        .item-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .item-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--theme-primary);
+        }
+        .item-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .item-category-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--theme-secondary);
+            border: 1px solid var(--theme-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Add to Cart Button */
+        .btn-add-to-cart {
+            background-color: var(--theme-secondary);
+            border-color: var(--theme-secondary);
+            color: white;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-add-to-cart:hover {
+            background-color: #f57c00;
+            border-color: #f57c00;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar navbar-light bg-light sticky-top app-header">
+    <div class="container">
+        <a class="navbar-brand text-theme fw-bold" th:href="@{/customer/restaurants}">
+            <i class="fas fa-arrow-left me-2"></i>
+        </a>
+        <span class="header-title h4 mb-0 flex-grow-1 text-center">
+            <i class="fas fa-book-open me-2"></i> Menu
+        </span>
+        <a class="navbar-brand text-theme fw-bold" th:href="@{/customer/cart}" style="font-size: 1.4rem;">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+    </div>
+</header>
+
+<div class="container content-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="restaurant-banner text-center">
+                <h1 class="fw-bolder mb-1"><span th:text="${restaurant != null ? restaurant.name : 'The Grand Kitchen'}">The Grand Kitchen</span></h1>
+                <p class="mb-0 fs-5">Feast on the best dishes in town!</p>
+            </div>
+
+            <h2 class="fw-bold mb-4 border-bottom pb-2 text-theme">
+                <i class="fas fa-list-ul me-2"></i> All Dishes
+            </h2>
+
+            <div th:each="item : ${menuItems}" class="menu-item-card">
+                
+                <div class="item-image-container">
+                    <img th:src="@{${item.imageUrl}}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Dish+Image'"
+                         class="item-image" alt="Dish Image">
+                </div>
+                
+                <div class="item-details">
+                    <div>
+                        <span class="item-category-tag" th:text="${item.category}">Category Name</span>
+                        <p class="item-name mt-1" th:text="${item.name}">Delicious Dish Name</p>
+                        <p class="item-description" th:text="${item.description}">This is a short, mouth-watering description of the dish ingredients.</p>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="item-price">₹<span th:text="${item.price}">250.00</span></span>
+                        
+                        <form th:action="@{/customer/cart/add}" method="post">
+                            <input type="hidden" name="itemId" th:value="${item.id != null ? item.id : '1'}">
+                            <button type="submit" class="btn btn-sm btn-add-to-cart">
+                                <i class="fas fa-cart-plus me-1"></i> Add
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(menuItems)}" class="text-center p-5 border rounded-3 bg-white shadow-sm">
+                <i class="fas fa-sad-tear fa-3x text-theme mb-3"></i>
+                <h4 class="text-muted fw-bold">Menu is Empty!</h4>
+                <p>The restaurant has not added any items yet. Please check back soon.</p>
+                <a th:href="@{/customer/restaurants}" class="btn btn-lg mt-3" style="background-color: var(--theme-primary); color: white; border-radius: 50px;">
+                    <i class="fas fa-arrow-left me-2"></i> Browse Other Restaurants
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

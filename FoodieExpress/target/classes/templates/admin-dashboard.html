@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress Admin | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --admin-primary: #5e72e4; /* Deep Blue/Violet for Admin Accent */
+            --admin-dark: #32325d; /* Dark text/header background */
+            --admin-bg: #f4f5f7; /* Very light gray background */
+            --success-color: #2dce89;
+            --danger-color: #f5365c;
+            --info-color: #11cdef;
+            --warning-color: #ffc107;
+        }
+        body {
+            background-color: var(--admin-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding-top: 70px; /* Space for fixed header */
+        }
+        .text-admin {
+            color: var(--admin-primary) !important;
+        }
+        .text-success-admin { color: var(--success-color) !important; }
+        .text-danger-admin { color: var(--danger-color) !important; }
+        .text-info-admin { color: var(--info-color) !important; }
+        .text-warning-admin { color: var(--warning-color) !important; }
+
+        /* --- Fixed Application Header (Admin Theme) --- */
+        .app-header {
+            background-color: var(--admin-dark); /* Darker header for Admin side */
+            border-bottom: 3px solid var(--admin-primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header-title {
+            color: white;
+            font-weight: 700;
+        }
+        .header-link {
+            color: #c4c4c4; /* Lighter link color */
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .header-link:hover {
+            color: var(--admin-primary);
+        }
+        .header-link.active {
+            color: var(--admin-primary);
+            border-bottom: 2px solid var(--admin-primary);
+        }
+
+        /* --- Welcome Section --- */
+        .welcome-title {
+            color: var(--admin-dark);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Quick Links Buttons --- */
+        .btn-quick-link {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .btn-quick-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Statistic Cards --- */
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--admin-primary);
+            transition: transform 0.2s ease;
+        }
+        .stat-card.success { border-left-color: var(--success-color); }
+        .stat-card.danger { border-left-color: var(--danger-color); }
+        .stat-card.info { border-left-color: var(--info-color); }
+        .stat-card.warning { border-left-color: var(--warning-color); }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: var(--admin-secondary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--admin-dark);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+        
+        /* --- Main Content Card for tables/charts --- */
+        .main-content-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fixed Application Header (Admin Theme) -->
+<header class="app-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand header-title" th:href="@{/admin/dashboard}">FoodieExpress <span class="text-admin">Admin</span></a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link header-link active" th:href="@{/admin/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/customers}">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/restaurants}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/logout}">Logout <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container py-5">
+    
+    <!-- Welcome and Quick Links (User-Provided Content) -->
+    <h2 class="welcome-title text-center">Welcome, FoodieExpress Admin!</h2>
+    <div class="container mt-4 mb-5">
+        <div class="row g-3 justify-content-center">
+            <div class="col-sm-12 col-md-4 d-grid">
+                <a th:href="@{/admin/restaurants}" class="btn btn-outline-primary btn-quick-link">
+                    <i class="fas fa-store me-2"></i> View All Restaurants
+                </a>
+            </div>
+            <div class="col-sm-12 col-md-4 d-grid">
+                <a th:href="@{/admin/customers}" class="btn btn-outline-secondary btn-quick-link">
+                    <i class="fas fa-users me-2"></i> View All Customers
+                </a>
+            </div>
+            <div class="col-sm-12 col-md-4 d-grid">
+                <a th:href="@{/admin/transactions}" class="btn btn-outline-success btn-quick-link">
+                    <i class="fas fa-chart-line me-2"></i> View All Orders
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Statistics Cards -->
+    <div class="row g-4 mb-5">
+        
+        <!-- Card 1: Total Revenue -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card success">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <p class="stat-label mb-0">Total Revenue</p>
+                        <!-- Mock data for demonstration -->
+                        <div class="stat-value text-success-admin">₹<span th:text="${stats.totalRevenue != null ? stats.totalRevenue : '8,50,000'}">8,50,000</span></div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <i class="fas fa-rupee-sign stat-icon text-success-admin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Total Orders -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card info">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <p class="stat-label mb-0">Total Orders</p>
+                        <div class="stat-value text-info-admin"><span th:text="${stats.totalOrders != null ? stats.totalOrders : '4,210'}">4,210</span></div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <i class="fas fa-truck stat-icon text-info-admin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        
+        
+    </div>
+    
+    <!-- Activity and Charts Placeholder -->
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="main-content-card h-100">
+                <h5 class="mb-4 text-admin"><i class="fas fa-chart-bar me-2"></i> Revenue & Orders Chart (Placeholder)</h5>
+                <div style="height: 300px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                    [Charts.js / D3.js Integration for weekly performance data]
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="main-content-card h-100">
+                <h5 class="mb-4 text-admin"><i class="fas fa-bell me-2"></i> Recent Admin Activity</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                        Restaurant 'Spice Hut' registration approved.
+                        <span class="badge bg-success rounded-pill">1m ago</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                        Customer 'Vijay K' password reset requested.
+                        <span class="badge bg-warning rounded-pill">30m ago</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                        New transaction recorded: Order #9876.
+                        <span class="badge bg-primary rounded-pill">1h ago</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                        'Pizza Palace' was deactivated due to multiple complaints.
+                        <span class="badge bg-danger rounded-pill">2h ago</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

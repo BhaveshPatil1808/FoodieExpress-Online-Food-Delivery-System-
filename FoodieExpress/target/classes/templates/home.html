@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodieExpress | Seamless Ordering</title>
+    <!-- Load Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Load Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Load Poppins Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Colors for FoodieExpress Dark theme */
+        :root {
+            --foodie-orange: #FF5722; /* Vibrant Orange (Hero Accent) */
+            --foodie-primary-blue: #3A86FF; /* Bright Blue (Customer Accent) */
+            --foodie-secondary-green: #06D6A0; /* Teal Green (Restaurant Accent) */
+            
+            /* GLOBAL Theme Colors (Navy/Charcoal - No Black/White) */
+            --dark-bg: #1A1A2E; /* Deep Navy/Charcoal for body */
+            --card-bg: #2A2A40; /* Slightly lighter navy for general cards */
+            --text-light: #EEEEEE; /* Light grey text (No White) */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg); /* Dark background */
+            color: var(--text-light); /* Light text by default */
+        }
+        
+        /* Hero Section (Full Viewport) */
+        .hero {
+            height: 100vh;
+            /* PRESERVING ORIGINAL BACKGROUND IMAGE PATH */
+            background: url('/images/home.png') no-repeat center/cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            /* Darker Overlay for readability (still no pure black) */
+            box-shadow: inset 0 0 0 1000px rgba(26, 26, 46, 0.7); 
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero-content h1 {
+            font-size: 4.5em;
+            font-weight: 900;
+            color: var(--foodie-orange); /* Branding Color */
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            animation: fadeInDown 1.5s ease;
+        }
+        .hero-content p {
+            font-size: 1.4em;
+            margin-top: 0.5em;
+            font-weight: 500;
+            animation: fadeInUp 2s ease;
+        }
+        .hero-content .lead {
+            font-size: 1.2em;
+            color: #ffccb8; /* Lighter shade of orange for lead text */
+            margin-top: 0.5em;
+        }
+        .btn-hero {
+            margin-top: 2em;
+            border-radius: 30px;
+            padding: 14px 40px;
+            font-size: 1.2em;
+            font-weight: 700;
+            background: var(--foodie-orange);
+            color: var(--dark-bg); /* Dark text on orange button */
+            border: 2px solid var(--foodie-orange);
+            transition: all 0.3s ease;
+        }
+        .btn-hero:hover {
+            /* Hover effect with no white color */
+            background: #e64a19; 
+            color: var(--text-light);
+            box-shadow: 0px 8px 25px rgba(255, 87, 34, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* How it Works Section */
+        .how-it-works {
+            text-align: center;
+            padding: 4em 2em;
+            background-color: #202038; /* Slightly different dark shade for contrast */
+        }
+        .how-it-works h2 {
+            font-weight: 700;
+            margin-bottom: 1em;
+            color: var(--foodie-orange);
+        }
+        .how-it-works p {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 1.1em;
+            color: var(--text-light);
+        }
+
+        /* Portal Section - WHITE STYLING APPLIED HERE */
+        .portal-section {
+            /* Pure white background for high contrast */
+            background: #FFFFFF; 
+            padding: 5em 0;
+        }
+        .portal-section h2 {
+            font-weight: 700;
+            margin-bottom: 2em;
+            /* Section title is dark navy for contrast on white background */
+            color: var(--dark-bg); 
+        }
+        .card-portal {
+            border: none;
+            border-radius: 20px;
+            transition: transform .4s ease, box-shadow .4s ease;
+            /* Pure white cards with a subtle shadow */
+            background: #FFFFFF; 
+            padding: 2.5em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            height: 100%;
+            /* Card text is dark navy for maximum readability on the white card */
+            color: var(--dark-bg); 
+            border: 1px solid #E0E0E0; /* Light border for definition */
+        }
+        .card-portal:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .card-portal i {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            transition: transform .4s;
+            /* Icons use the dark navy color for contrast on white */
+            color: var(--dark-bg) !important; 
+        }
+        /* Ensuring all primary text elements are dark navy */
+        .card-portal h4 {
+            color: var(--dark-bg);
+        }
+
+        .text-muted {
+            /* Muted text should be a darker shade of gray for contrast on the white cards */
+            color: #4a4a6e !important; 
+        }
+        .btn-role-select {
+            border-radius: 30px;
+            padding: 10px 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            /* Button text is white/light since the button backgrounds are vibrant colors */
+            color: var(--text-light) !important; 
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        /* Specific Button Styling (Accents retained, with light text for contrast) */
+        .btn-customer {
+            background-color: var(--foodie-primary-blue) !important;
+            border-color: var(--foodie-primary-blue) !important;
+        }
+        .btn-customer:hover { 
+            background-color: #0060AA !important; /* Darker blue */
+            transform: scale(1.05);
+        }
+
+        .btn-restaurant {
+            background-color: var(--foodie-secondary-green) !important;
+            border-color: var(--foodie-secondary-green) !important;
+        }
+        .btn-restaurant:hover { 
+            background-color: #04b383 !important; /* Darker green */
+            transform: scale(1.05);
+        }
+
+        .btn-admin {
+            background-color: #aaaaaa !important;
+            border-color: #aaaaaa !important;
+        }
+        .btn-admin:hover { 
+            background-color: #888888 !important; /* Darker gray */
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: #0d0d1a; /* Even darker footer */
+            color: var(--text-light);
+            padding: 1.5em 0;
+            text-align: center;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {opacity: 0; transform: translateY(-30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInUp {
+            from {opacity: 0; transform: translateY(30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <i class="fa-solid fa-utensils fa-4x mb-4" style="color: var(--foodie-orange);"></i>
+    <h1>FoodieExpress</h1>
+    <p>Your Fast-Track to Flavor</p>
+    <p class="lead">Connecting hungry customers with top-rated restaurants, delivering speed and taste to your door.</p>
+    <!-- Anchor to the role selection section -->
+    <a href="#roles" class="btn btn-hero">🍔 Start Ordering</a>
+  </div>
+</section>
+
+<!-- How it Works -->
+<section class="how-it-works">
+  <h2>How FoodieExpress Works</h2>
+  <p>FoodieExpress is a modern platform that simplifies food delivery and management. Customers browse, order, and track. Restaurants manage menus, receive orders, and coordinate fulfillment. Admins ensure the entire ecosystem runs smoothly and efficiently.</p>
+</section>
+
+<!-- Portal Section (Role Selection) -->
+<section id="roles" class="portal-section">
+  <div class="container">
+    <div class="row text-center">
+        <!-- Text color is dark navy for contrast on the white section background -->
+        <h2 class="mb-5">Select Your Portal</h2>
+        
+      <div class="col-md-4 mb-4">
+        <div class="card card-portal d-flex flex-column align-items-center">
+          <!-- Icon and Text are dark navy for contrast on the white card -->
+          <i class="fa-solid fa-burger text-customer"></i> 
+          <h4 class="mt-2 mb-3">Customer</h4>
+          <p class="text-muted">Browse menus, place orders, and track your delicious delivery right to your door.</p>
+          <!-- THYMELEAF CODE PRESERVED -->
+          <a th:href="@{/login/customer}" class="btn btn-customer btn-role-select mt-auto">
+              <i class="fas fa-sign-in-alt me-2"></i> Customer Login
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4">
+        <div class="card card-portal d-flex flex-column align-items-center">
+          <!-- Icon and Text are dark navy for contrast on the white card -->
+          <i class="fa-solid fa-store text-restaurant"></i> 
+          <h4 class="mt-2 mb-3">Restaurant</h4>
+          <p class="text-muted">Manage your menu, process incoming orders, and boost your local delivery presence.</p>
+          <!-- THYMELEAF CODE PRESERVED -->
+          <a th:href="@{/login/restaurant}" class="btn btn-restaurant btn-role-select mt-auto">
+              <i class="fas fa-sign-in-alt me-2"></i> Restaurant Login
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4">
+        <div class="card card-portal d-flex flex-column align-items-center">
+          <!-- Icon and Text are dark navy for contrast on the white card -->
+          <i class="fa-solid fa-user-shield text-admin"></i> 
+          <h4 class="mt-2 mb-3">Admin</h4>
+          <p class="text-muted">Oversee all operations, manage users, and ensure platform health and security.</p>
+          <!-- THYMELEAF CODE PRESERVED -->
+          <a th:href="@{/login/admin}" class="btn btn-admin btn-role-select mt-auto">
+              <i class="fas fa-sign-in-alt me-2"></i> Admin Login
+          </a>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  © 2024 FoodieExpress. All rights reserved. • Fast food, fast delivery.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

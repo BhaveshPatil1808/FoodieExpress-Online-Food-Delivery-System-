@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress | Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --theme-primary: #5e72e4; /* Deep Blue/Violet for Admin Accent */
+            --theme-secondary: #8898aa; /* Slate Gray for secondary text */
+            --theme-bg: #f4f5f7; /* Very light gray background */
+        }
+        body {
+            background-color: var(--theme-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --- Login Card Container --- */
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .login-card:hover {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Header Styling --- */
+        .card-header-admin {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .app-logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--theme-primary);
+            line-height: 1.2;
+        }
+        .sub-header {
+            color: var(--theme-secondary);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* --- Form Control Styling --- */
+        .input-group-text {
+            border-radius: 10px 0 0 10px !important;
+            border-color: #ced4da;
+            color: var(--theme-secondary);
+        }
+        .form-control {
+            border-radius: 0 10px 10px 0 !important;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(94, 114, 228, 0.25); /* Focus based on primary color */
+            border-color: var(--theme-primary);
+        }
+
+        /* --- Button Styling --- */
+        .btn-login {
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
+            color: white;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .btn-login:hover {
+            background-color: #4b5be0; /* Slightly darker shade on hover */
+            border-color: #4b5be0;
+            transform: translateY(-1px);
+        }
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* --- Footer Link Styling --- */
+        .footer-link a {
+            color: var(--theme-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .footer-link a:hover {
+            color: #3f51b5;
+            text-decoration: underline;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="card-header-admin">
+        <h1 class="app-logo">Foodie<span style="color: #ff9800;">Express</span></h1>
+        <p class="sub-header"><i class="fas fa-lock me-1"></i> Admin Portal Login</p>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+        Invalid Email or Password. Please try again.
+    </div>
+    
+    <!-- Admin Login Form -->
+    <form th:action="@{/admin/login}" method="post" class="needs-validation" novalidate>
+        
+        <div class="mb-3">
+            <label for="email" class="form-label visually-hidden">Email</label>
+            <div class="input-group">
+                <!-- Icon changed to shield for Admin persona -->
+                <span class="input-group-text bg-white border-end-0"><i class="fas fa-user-shield text-muted"></i></span>
+                <input type="email" id="email" name="email" class="form-control border-start-0" 
+                       placeholder="Admin Email" required>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="form-label visually-hidden">Password</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock text-muted"></i></span>
+                <input type="password" id="password" name="password" class="form-control border-start-0" 
+                       placeholder="Password" required>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-login btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i> Log in to Admin Panel
+            </button>
+        </div>
+    </form>
+    
+    <div class="text-center mt-4 footer-link">
+        <p class="mb-1 text-muted">Trouble logging in? <a href="#">Contact Support</a></p>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS Bundle (optional, but good practice for full Bootstrap functionality) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

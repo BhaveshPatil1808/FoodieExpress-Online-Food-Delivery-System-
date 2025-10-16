@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress | Your Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center text-theme">🛒 Your Cart</h2>
+
+    <div th:if="${#lists.isEmpty(cart)}" class="text-center p-5 bg-white rounded shadow-sm">
+        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Your cart is empty</h4>
+        <a th:href="@{/customer/restaurants}" class="btn btn-warning mt-3">
+            <i class="fas fa-arrow-left me-2"></i> Browse Restaurants
+        </a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(cart)}" class="bg-white p-4 rounded shadow-sm">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Dish</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ci : ${cart}">
+                    <td th:text="${ci.menuItem.name}">Dish Name</td>
+                    <td th:text="${ci.quantity}">1</td>
+                    <td>₹<span th:text="${ci.menuItem.price}">100</span></td>
+                    <td>₹<span th:text="${ci.menuItem.price * ci.quantity}">100</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-end mt-4">
+				<form th:action="@{/customer/checkout}" method="get">
+					<button type="submit" class="btn btn-success btn-lg">
+						<i class="fas fa-credit-card me-2"></i> Proceed to Payment
+					</button>
+				</form>
+
+			</div>
+    </div>
+</div>
+
+</body>
+</html>

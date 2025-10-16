@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress Admin | Restaurants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --admin-primary: #5e72e4; /* Deep Blue/Violet for Admin Accent */
+            --admin-dark: #32325d; /* Dark text/header background */
+            --admin-bg: #f4f5f7; /* Very light gray background */
+        }
+        body {
+            background-color: var(--admin-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding-top: 70px; /* Space for fixed header */
+        }
+        .text-admin {
+            color: var(--admin-primary) !important;
+        }
+
+        /* --- Fixed Application Header (Admin Theme) --- */
+        .app-header {
+            background-color: var(--admin-dark); /* Darker header for Admin side */
+            border-bottom: 3px solid var(--admin-primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header-title {
+            color: white;
+            font-weight: 700;
+        }
+        .header-link {
+            color: #c4c4c4; /* Lighter link color */
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .header-link:hover {
+            color: var(--admin-primary);
+        }
+        .header-link.active {
+            color: var(--admin-primary);
+            border-bottom: 2px solid var(--admin-primary);
+        }
+
+        /* --- Main Content Card --- */
+        .main-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        /* --- Table Styling --- */
+        .table {
+            margin-top: 1.5rem;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table-light {
+             /* Use admin primary color in the table header for better consistency */
+            background-color: var(--admin-primary) !important;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .table-light th {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .table-bordered {
+            border-color: #e9ecef;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .restaurant-image {
+            width: 60px; 
+            height: 60px; 
+            object-fit: cover; 
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .dishes-count-text {
+            font-weight: 600;
+            color: var(--admin-dark);
+        }
+        
+        .btn-show-dishes {
+            font-weight: 600;
+            border-radius: 50px;
+        }
+        
+        /* Responsive Table adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid #dee2e6;
+                border-radius: 10px;
+            }
+            .main-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fixed Application Header (Admin Theme) -->
+<header class="app-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand header-title" th:href="@{/admin/dashboard}">FoodieExpress <span class="text-admin">Admin</span></a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/customers}">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link active" th:href="@{/admin/restaurants}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/logout}">Logout <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center" style="font-weight: 700;">Partner Restaurant List</h2>
+
+    <div class="main-card">
+        <h4 class="mb-4 text-admin"><i class="fas fa-store me-2"></i> All Registered Restaurants</h4>
+        
+        <!-- Search and Filter Bar (Placeholder) -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search by Restaurant Name or Email...">
+                </div>
+            </div>
+            <div class="col-md-4 mt-3 mt-md-0 d-grid">
+                <button class="btn btn-outline-secondary">
+                    <i class="fas fa-filter me-1"></i> Filter by Status
+                </button>
+            </div>
+        </div>
+        
+        <!-- Restaurant Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 10%;">Image</th>
+                        <th style="width: 20%;">Name</th>
+                        <th style="width: 25%;">Email</th>
+                        <th style="width: 15%;">Contact</th>
+                        <th style="width: 10%;">Dishes</th>
+                        <th style="width: 20%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Actual Data Loop -->
+                    <tr th:each="r : ${restaurants}">
+                        <!-- Restaurant Image -->
+                        <td>
+                            <img th:src="@{${r.imageUrl}}" alt="Restaurant Image"
+                                 class="restaurant-image" />
+                        </td>
+
+                        <!-- Restaurant Info -->
+                        <td th:text="${r.name}">Spice Hut</td>
+                        <td th:text="${r.email}">spicehut@partner.com</td>
+                        <td th:text="${r.contact}">+91 90000 11111</td>
+                        <td class="dishes-count-text" th:text="${r.menuItems.size()}">5</td>
+
+                        <!-- Action Buttons -->
+                        <td>
+                            <a th:href="@{'/admin/restaurant/' + ${r.id} + '/dishes'}"
+                               class="btn btn-sm btn-outline-primary btn-show-dishes">
+                                <i class="fas fa-utensils me-1"></i> View Menu
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger ms-1" title="Deactivate Restaurant">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Mock Data for Demonstration if list is empty -->
+                    <tr th:if="${#lists.isEmpty(restaurants)}">
+                        <td>
+                            <img src="https://placehold.co/60x60/888888/ffffff?text=R1" alt="Placeholder Image" class="restaurant-image" />
+                        </td>
+                        <td>Pizza Planet</td>
+                        <td>pizza.planet@partner.com</td>
+                        <td>+91 87654 32100</td>
+                        <td class="dishes-count-text">12</td>
+                        <td>
+                            <a th:href="@{'/admin/restaurant/2/dishes'}" class="btn btn-sm btn-outline-primary btn-show-dishes"><i class="fas fa-utensils me-1"></i> View Menu</a>
+                            <button class="btn btn-sm btn-outline-danger ms-1"><i class="fas fa-user-slash"></i></button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(restaurants)}">
+                        <td colspan="6" class="text-center p-4 text-muted">
+                            <i class="fas fa-info-circle me-1"></i> No restaurant registrations found.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

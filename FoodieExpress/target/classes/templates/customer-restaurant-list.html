@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress | Browse Restaurants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --theme-primary: #ff5722; /* Deep Orange */
+            --theme-secondary: #ff9800; /* Amber */
+            --theme-bg: #fffbf5; /* Very light, warm background */
+        }
+        body {
+            background-color: var(--theme-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding-top: 70px; /* Space for fixed header */
+        }
+        
+        /* --- Fixed Application Header --- */
+        .app-header {
+            background-color: white;
+            border-bottom: 2px solid var(--theme-primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header-title {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .text-theme { color: var(--theme-primary); }
+        .content-container { padding-top: 2rem; padding-bottom: 3rem; }
+
+        /* --- Search & Filter Bar --- */
+        .search-bar-container {
+            background: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .search-input {
+            border-radius: 50px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+        }
+        .btn-filter {
+            background-color: #f0f0f0;
+            border: none;
+            color: #555;
+            border-radius: 50px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .btn-filter:hover { background-color: #ddd; }
+
+        /* --- Restaurant Card Styling --- */
+        .restaurant-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: white;
+            margin-bottom: 25px;
+        }
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* SOLID FIX: Aspect Ratio Container using Padding Hack */
+        .img-container {
+            width: 100%;
+            padding-top: 75%; /* Forces 4:3 aspect ratio (3/4 = 0.75 * 100 = 75%) */
+            position: relative; 
+            overflow: hidden;
+        }
+        
+        .card-img-top {
+            /* Position the image absolutely inside the padded container */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the entire 4:3 container */
+            display: block; 
+        }
+        
+        /* --- Rating Badge (Needs absolute positioning relative to img-container) --- */
+        .rating-badge {
+            position: absolute;
+            bottom: 15px; 
+            left: 15px;
+            background-color: #4caf50; 
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            z-index: 20; /* Ensure badge is on top */
+        }
+        .rating-badge i { font-size: 0.9rem; margin-right: 3px; }
+
+        /* --- Details Text --- */
+        .location-text {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .view-menu-btn {
+            background-color: var(--theme-secondary);
+            border-color: var(--theme-secondary);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 8px 20px;
+            transition: all 0.3s;
+        }
+        .view-menu-btn:hover {
+            background-color: #f57c00;
+            border-color: #f57c00;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar navbar-light bg-light sticky-top app-header">
+    <div class="container">
+        <a class="navbar-brand text-theme fw-bold" th:href="@{/customer/dashboard}">
+            <i class="fas fa-arrow-left me-2"></i>
+        </a>
+        <span class="header-title h4 mb-0 flex-grow-1 text-center">
+            <i class="fas fa-utensils me-2"></i> Available Restaurants
+        </span>
+        <a class="navbar-brand text-theme fw-bold" th:href="@{/customer/orders}" style="font-size: 1.2rem;">
+            <i class="fas fa-history"></i>
+        </a>
+    </div>
+</header>
+
+<div class="container content-container">
+
+    <div class="search-bar-container">
+        <div class="row g-3 px-3 align-items-center">
+            <div class="col-md-9 col-8">
+                <input type="text" class="form-control search-input" placeholder="Search by restaurant name or dish..." aria-label="Search">
+            </div>
+            <div class="col-md-3 col-4 d-grid">
+                <button class="btn btn-filter fw-bold">
+                    <i class="fas fa-sliders-h me-1"></i> Filters
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xl-4 col-md-6" th:each="r : ${restaurants}">
+            <div class="card restaurant-card">
+                
+                <!-- Use the Aspect Ratio Container -->
+                <div class="img-container">
+                    <img th:src="@{${r.imageUrl}}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/600x450?text=FoodieExpress+Restaurant'" 
+                         class="card-img-top" alt="Restaurant Image">
+                    
+                    <!-- Rating badge remains positioned absolutely within the img-container -->
+                    <div class="rating-badge">
+                        <i class="fas fa-star"></i> <span>4.0</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bolder text-dark mb-1" th:text="${r.name}">Restaurant Name</h5>
+                    
+                    <p class="card-text location-text mb-2">
+                        <i class="fas fa-map-marker-alt me-1 text-theme"></i> 
+                        <span th:text="${r.location}">City/Area</span>
+                    </p>
+                    <p class="card-text location-text mb-3">
+                        <i class="fas fa-phone me-1 text-muted"></i> 
+                        <span th:text="${r.contact}">+91 98765 43210</span>
+                    </p>
+                    
+                    <div class="d-grid">
+                        <a th:href="@{'/restaurant/menu?restaurantId=' + ${r.id}}" class="btn btn-primary btn-sm view-menu-btn">
+                            <i class="fas fa-book-open me-1"></i> View Menu
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div th:if="${#lists.isEmpty(restaurants)}" class="text-center p-5 border rounded-3 bg-white shadow-sm mt-4">
+            <i class="fas fa-sad-tear fa-3x text-theme mb-3"></i>
+            <h4 class="text-muted fw-bold">Oops! No Restaurants Found.</h4>
+            <p>We're working hard to bring more restaurants to your area. Try searching again later.</p>
+            <a th:href="@{/customer/dashboard}" class="btn btn-lg mt-3" style="background-color: var(--theme-primary); color: white; border-radius: 50px;">
+                <i class="fas fa-home me-2"></i> Go to Dashboard
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

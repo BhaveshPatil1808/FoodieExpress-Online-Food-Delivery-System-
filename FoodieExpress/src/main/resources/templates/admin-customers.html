@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FoodieExpress Admin | Customers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --admin-primary: #5e72e4; /* Deep Blue/Violet for Admin Accent */
+            --admin-dark: #32325d; /* Dark text/header background */
+            --admin-bg: #f4f5f7; /* Very light gray background */
+        }
+        body {
+            background-color: var(--admin-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding-top: 70px; /* Space for fixed header */
+        }
+        .text-admin {
+            color: var(--admin-primary) !important;
+        }
+
+        /* --- Fixed Application Header (Admin Theme) --- */
+        .app-header {
+            background-color: var(--admin-dark); /* Darker header for Admin side */
+            border-bottom: 3px solid var(--admin-primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header-title {
+            color: white;
+            font-weight: 700;
+        }
+        .header-link {
+            color: #c4c4c4; /* Lighter link color */
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .header-link:hover {
+            color: var(--admin-primary);
+        }
+        .header-link.active {
+            color: var(--admin-primary);
+            border-bottom: 2px solid var(--admin-primary);
+        }
+
+        /* --- Main Content Card --- */
+        .main-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        /* --- Table Styling --- */
+        .table {
+            margin-top: 1.5rem;
+            border-radius: 10px;
+            overflow: hidden; /* Ensures rounded corners clip table content */
+        }
+        .table thead th {
+            background-color: var(--admin-primary);
+            color: white;
+            font-weight: 600;
+            vertical-align: middle;
+            border-bottom: none;
+            padding: 0.75rem 1rem;
+        }
+        .table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: #fcfcfc;
+        }
+        .customer-id {
+            color: var(--admin-primary);
+            font-weight: 600;
+        }
+        .order-count-badge {
+            background-color: #f7f7f7;
+            color: var(--admin-dark);
+            font-weight: 700;
+            padding: 0.5em 0.8em;
+            border-radius: 8px;
+            min-width: 50px;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        /* Responsive Table adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid #dee2e6;
+                border-radius: 10px;
+            }
+            .main-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fixed Application Header (Admin Theme) -->
+<header class="app-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand header-title" th:href="@{/admin/dashboard}">FoodieExpress <span class="text-admin">Admin</span></a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link active" th:href="@{/admin/customers}">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/restaurants}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-link" th:href="@{/admin/logout}">Logout <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center" style="font-weight: 700;">Customer Management</h2>
+
+    <div class="main-card">
+        <h4 class="mb-4 text-admin"><i class="fas fa-users me-2"></i> Registered Users</h4>
+
+        <!-- Search and Filter Bar (Placeholder) -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search by Name, Email, or Contact...">
+                </div>
+            </div>
+            <div class="col-md-4 mt-3 mt-md-0 d-grid">
+                <button class="btn btn-outline-secondary">
+                    <i class="fas fa-filter me-1"></i> Filter Options
+                </button>
+            </div>
+        </div>
+        
+        <!-- Customer Table (Responsive Wrapper Added) -->
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Name</th>
+                        <th style="width: 30%;">Email</th>
+                        <th style="width: 20%;">Contact</th>
+                        <th class="text-center" style="width: 15%;">Orders</th>
+                        <th class="text-center" style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Actual Data Loop -->
+                    <tr th:each="c : ${customers}">
+                        <td th:text="${c.name}">Aarav Sharma</td>
+                        <td th:text="${c.email}">aarav.sharma@example.com</td>
+                        <td th:text="${c.contact}">+91 9988776655</td>
+                        <td class="text-center">
+                            <span class="order-count-badge" th:text="${c.orders.size()}">3</span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger ms-2" title="Deactivate Account">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Mock Data for Demonstration if list is empty -->
+                    <tr th:if="${#lists.isEmpty(customers)}">
+                        <td><span class="customer-id">Riya Singh</span></td>
+                        <td>riya.singh@example.com</td>
+                        <td>+91 9000123456</td>
+                        <td class="text-center"><span class="order-count-badge">8</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-danger ms-2"><i class="fas fa-user-slash"></i></button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(customers)}">
+                        <td><span class="customer-id">Vijay Kumar</span></td>
+                        <td>vijay.k@mail.com</td>
+                        <td>+91 8765432100</td>
+                        <td class="text-center"><span class="order-count-badge">1</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-danger ms-2"><i class="fas fa-user-slash"></i></button>
+                        </td>
+                    </tr>
+
+                    <!-- Fallback message -->
+                    <tr th:if="${#lists.isEmpty(customers)}">
+                        <td colspan="5" class="text-center p-4 text-muted">
+                            <i class="fas fa-info-circle me-1"></i> No customers found in the system.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
