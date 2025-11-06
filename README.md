@@ -71,5 +71,21 @@ Admin login: http://localhost:8080/admin/login
 
 <img width="1898" height="852" alt="image" src="https://github.com/user-attachments/assets/b2c12b01-15c7-404e-a368-a3a354b96542" />
 <br></br>
+
 # Run the application
 mvn spring-boot:run
+
+
+
+
+
+
+
+🔮 Future Enhancements
+Split into Spring Boot microservices with Eureka, Gateway, Config Server
+
+Add JWT‑based authentication for stateless APIs
+
+Integrate payment gateway simulation
+
+Add delivery partner role with live tracking
