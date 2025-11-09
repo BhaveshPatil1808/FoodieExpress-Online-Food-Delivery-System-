@@ -63,7 +63,7 @@ Restaurant login: http://localhost:8080/restaurant/login
 Admin login: http://localhost:8080/admin/login
 
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 📸 Screenshots
 <img width="1896" height="935" alt="image" src="https://github.com/user-attachments/assets/0b8dab96-5f95-4265-917c-f764435959de" />
 
