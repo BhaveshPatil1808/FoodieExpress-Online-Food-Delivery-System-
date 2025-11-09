@@ -45,14 +45,7 @@ FoodieExpress is a full‑stack food delivery platform built with **Spring Boot*
 - Maven 3+
 - MySQL/PostgreSQL running locally
 
-### Installation
-```bash
-# Clone the repository
-git clone https://github.com/your-username/foodieexpress.git
-cd foodieexpress
 
-# Build the project
-mvn clean install
 
 
 Access
